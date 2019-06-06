@@ -23,11 +23,11 @@ resource "aws_api_gateway_integration" "event" {
   type                    = "AWS"
   uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:sns:path//"
 
-  request_parameters {
+  request_parameters = {
     "integration.request.header.Content-Type" = "'application/x-www-form-urlencoded'"
   }
 
-  request_templates {
+  request_templates = {
     "application/json" = <<EOF
 Action=Publish##
 &Message=$util.urlEncode($input.body)##
@@ -59,8 +59,8 @@ resource "aws_api_gateway_method" "event" {
   resource_id          = "${aws_api_gateway_resource.event.*.id[count.index]}"
   rest_api_id          = "${aws_api_gateway_rest_api.bitbucket.id}"
 
-  request_parameters {
-    method.request.header.X-Event-Key = true
+  request_parameters = {
+    "method.request.header.X-Event-Key" = true
   }
 }
 
